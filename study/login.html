@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>meta</title>
+  </head>
+  <body>
+    <div>META
+      <br/>
+      <p id="status">PUBLISH_BEFORE</p>
+    </div>
+    <script>
+      var file_socket = io("http://localhost:8000/access", {path: "/my_socket/v1/concurrent", transports: ['websocket', 'polling']});
+
+      file_socket.on("connect", () => {
+        console.log("connection server");
+
+        join_data = {
+          "user_id": 1,
+          "user_account": "chloe",
+          "ip_address": "127.0.0.1"
+        };
+
+        file_socket.emit("login", JSON.stringify(join_data));
+
+        file_socket.on("login-user", (data) => {
+          console.log(data);
+        });
+
+        file_socket.on("other-login", (data) => {
+          console.log(data);
+        });
+        file_socket.on("disconnect", ()=>{
+          console.log("disconnect socket server");
+        });
+      });
+    </script>
+  </body>
+</html>

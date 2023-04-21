@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>test</title>
+  </head>
+  <body>
+    <div>DOC1_TASK2
+      <br/>
+      <p id="status">PUBLISH_BEFORE</p>
+    </div>
+    <script>
+      var file_socket = io("http://192.168.0.238:14241/publish", {path: "/socket/v1/admin", transports: ['websocket', 'polling']});
+
+      file_socket.on("connect", () => {
+        console.log("connection server");
+
+        join_data = {
+          "doc_id": "497324bfbf94d0228ce5da92dd2595c1",
+          "task_id": "4d7c80af9d8cfc4e9bae4236628cd147",
+          "user_account": "chloe"
+        };
+
+        file_socket.emit("join", JSON.stringify(join_data));
+
+        file_socket.on("upload-other-users", (data) => {
+          console.log(data);
+        });
+
+        file_socket.on("change-publish-status", (data) => {
+          document.getElementById('status').innerHTML = data;
+        });
+        file_socket.on("disconnect", ()=>{
+          console.log("disconnect socket server");
+        });
+      });
+    </script>
+  </body>
+</html>

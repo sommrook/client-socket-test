@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>test</title>
+  </head>
+  <body>
+    <div>client1</div>
+    <script>
+      var file_socket = io("http://192.168.0.238:14240/files", {path: "/socket/v1/annotator", transports: ['websocket', 'polling']});
+
+      file_socket.on("connect", () => {
+        console.log("connection server");
+
+        join_data = {
+          "file_uuid": "123",
+          "user_account": "1"
+        };
+
+        file_socket.emit("join", JSON.stringify(join_data));
+
+        file_socket.on("access-other-user", (user_id) => {
+          alert("access other user is .." + user_id);
+        });
+
+        file_socket.on("already-use-file", (data) => {
+          alert("already use file user is .." + data);
+        });
+        file_socket.on("disconnect", ()=>{
+          alert("disconnect socket server");
+        });
+      });
+    </script>
+  </body>
+</html>
